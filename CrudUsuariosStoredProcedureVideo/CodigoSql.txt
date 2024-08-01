@@ -1,0 +1,100 @@
+﻿
+--CREATE TABLE Usuarios(
+--	Id int IDENTITY(1, 1),
+--	Nome varchar(100),
+--	Sobrenome varchar(100),
+--	Email varchar(100),
+--	Cargo Varchar(100)
+--)
+
+
+--Ler todos os Usuários
+
+create or alter Proc [DBO].[listar_usuarios]
+as 
+Begin
+	select Id, Nome, Sobrenome, Email, Cargo from Usuarios 
+End
+
+--Buscar usuário por Id
+create Proc [DBO].[listar_usuario_id]
+(
+	@Id int
+)
+as 
+Begin
+	select Id, Nome, Sobrenome, Email, Cargo from Usuarios where Id = @Id
+End
+
+--Inserir Usuario
+create Proc [DBO].[inserir_usuario]
+(
+	@Nome varchar(100),
+	@Sobrenome varchar(100),
+	@Email varchar(100),
+	@Cargo varchar(100)
+)
+as 
+Begin
+
+	insert into usuarios (Nome, Sobrenome, Email,Cargo) 
+	values (@Nome, @Sobrenome, @Email, @Cargo)
+
+End
+
+--Editar Usuario
+create Proc [DBO].[editar_usuario]
+(
+	@Id int,
+	@Nome varchar(100),
+	@Sobrenome varchar(100),
+	@Email varchar(100),
+	@Cargo varchar(100)
+)
+as 
+Begin
+	declare @contagem int = 0
+
+	set @contagem = (select count(1) from Usuarios where Id = @Id)
+
+	if(@contagem > 0)
+		Begin
+
+			update Usuarios
+				set
+					Nome = @Nome,
+					Sobrenome = @Sobrenome,
+					Email = @Email,
+					Cargo = @Cargo
+				where Id = @Id
+
+
+		End
+
+
+End
+
+
+--- Remover Usuário
+
+create Proc [DBO].[remover_usuario]
+(
+	@Id int
+)
+as 
+Begin
+	declare @contagem int = 0
+
+	set @contagem = (select count(1) from Usuarios where Id = @Id)
+
+	if(@contagem > 0)
+		Begin
+
+			delete Usuarios
+			where Id = @Id
+
+
+		End
+
+
+End
